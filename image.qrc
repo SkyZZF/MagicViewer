@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>image/about.png</file>
+    <file>image/exit.png</file>
+    <file>image/fitsize.png</file>
+    <file>image/full.png</file>
+    <file>image/Icon.png</file>
+    <file>image/loop.png</file>
+    <file>image/next.png</file>
+    <file>image/open.png</file>
+    <file>image/openfolder.png</file>
+    <file>image/previous.png</file>
+    <file>image/relsize.png</file>
+    <file>image/rotate_right.png</file>
+    <file>image/rotate_left.png</file>
+    <file>image/zoom_in.png</file>
+    <file>image/zoom_out.png</file>
+  </qresource>
+</RCC>

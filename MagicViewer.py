@@ -7,10 +7,11 @@
 __version__ = 0.4
 import os
 import sys
+import image_qr
 from functools import partial
-from PyQt5.QtGui import QPixmap, QTransform, QIcon, QFont, QPalette, QColor, QCursor
+from PyQt5.QtGui import QPixmap, QTransform, QIcon, QFont, QCursor
 from PyQt5.QtWidgets import (QFileDialog, QMainWindow, QApplication, QGraphicsScene,
-                             QGraphicsView, QMenu, QMessageBox, QPushButton,QWidget)
+                             QGraphicsView, QMenu, QMessageBox, QPushButton)
 from PyQt5.QtCore import QDir, QFileInfo, Qt ,QTimer
 class ImageViewer(QMainWindow):
 
@@ -27,7 +28,7 @@ class ImageViewer(QMainWindow):
         self.resize(1000, 800)
         self.setFixedSize(self.width(),self.height())
         self.setWindowTitle("Magic Viewer")
-        self.setWindowIcon(QIcon('image\\Icon.png'))
+        self.setWindowIcon(QIcon(':/image/Icon.png'))
 
         self.btn = QPushButton("打开图片", self)
         self.btn.resize(200, 80)
@@ -44,25 +45,25 @@ class ImageViewer(QMainWindow):
         self.menu = QMenu(self)
         self.function_menu=QMenu(self.menu)
         self.function_menu.setTitle('功能')
-        self.open_menu = self.menu.addAction(QIcon('image\\open.png'),'打开          O')
-        self.file_path_menu = self.menu.addAction(QIcon('image\\openfolder.png'),'打开文件所在位置')
+        self.open_menu = self.menu.addAction(QIcon(':/image/open.png'),'打开          O')
+        self.file_path_menu = self.menu.addAction(QIcon(':/image/openfolder.png'),'打开文件所在位置')
 
         self.menu.addSeparator()
         self.menu.addMenu(self.function_menu)
-        self.zoom_in_menu = self.function_menu.addAction(QIcon('image\\zoom_in.png'), '放大          Scorll Up, W',)
-        self.zoom_out_menu = self.function_menu.addAction(QIcon('image\\zoom_out.png'), '缩小          Scroll Down, S')
-        self.rotate_right_menu = self.function_menu.addAction(QIcon('image\\rotate_right.png'), '顺转90°     R')
-        self.rotate_left_menu = self.function_menu.addAction(QIcon('image\\rotate_left.png'), '逆转90°     E')
-        self.fitsize_menu = self.function_menu.addAction(QIcon('image\\fitsize.png'),'适合屏幕    F')
-        self.relsize_menu = self.function_menu.addAction(QIcon('image\\relsize.png'),'实际尺寸    1')
-        self.loop_menu = self.function_menu.addAction(QIcon('image\\loop.png'), '幻灯片       L')
-        self.about_menu = self.function_menu.addAction(QIcon('image\\about.png'),'关于Magic Viewer')
+        self.zoom_in_menu = self.function_menu.addAction(QIcon(':/image/zoom_in.png'), '放大          Scorll Up, W',)
+        self.zoom_out_menu = self.function_menu.addAction(QIcon(':/image/zoom_out.png'), '缩小          Scroll Down, S')
+        self.rotate_right_menu = self.function_menu.addAction(QIcon(':/image/rotate_right.png'), '顺转90°     R')
+        self.rotate_left_menu = self.function_menu.addAction(QIcon(':/image/rotate_left.png'), '逆转90°     E')
+        self.fitsize_menu = self.function_menu.addAction(QIcon(':/image/fitsize.png'),'适合屏幕    F')
+        self.relsize_menu = self.function_menu.addAction(QIcon(':/image/relsize.png'),'实际尺寸    1')
+        self.loop_menu = self.function_menu.addAction(QIcon(':/image/loop.png'), '幻灯片       L')
+        self.about_menu = self.function_menu.addAction(QIcon(':/image/about.png'),'关于Magic Viewer')
         self.menu.addSeparator()
-        self.next_menu = self.menu.addAction(QIcon('image\\next.png'), '下一张       Right, SPACE')
-        self.previous_menu = self.menu.addAction(QIcon('image\\previous.png'), '上一张       Left, B')
-        self.full_menu = self.menu.addAction(QIcon('image\\full.png'), '全屏          F11')
+        self.next_menu = self.menu.addAction(QIcon(':/image/next.png'), '下一张       Right, SPACE')
+        self.previous_menu = self.menu.addAction(QIcon(':/image/previous.png'), '上一张       Left, B')
+        self.full_menu = self.menu.addAction(QIcon(':/image/full.png'), '全屏          F11')
         self.menu.addSeparator()
-        self.close_menu=self.menu.addAction(QIcon('image\\exit.png'),'退出          Q, ESC')
+        self.close_menu=self.menu.addAction(QIcon(':/image/exit.png'),'退出')
 
        # 事件绑定
         self.zoom_in_menu.triggered.connect(self.zoomIn)
@@ -78,7 +79,7 @@ class ImageViewer(QMainWindow):
         self.close_menu.triggered.connect(self.closeMainWindow)
         self.file_path_menu.triggered.connect(self.openfile_path)
         self.about_menu.triggered.connect(self.about)
-
+        self.loop_menu.triggered.connect(self.loop_start)
         # 判断是否是幻灯片模式
         self.isLoop = False
 
@@ -207,13 +208,12 @@ class ImageViewer(QMainWindow):
             self.dirBrowse(1)
         elif event.key() == Qt.Key_Left or event.key() == Qt.Key_B:
             self.dirBrowse(-1)
-        elif event.key() == Qt.Key_Q or event.key() == Qt.Key_Escape:
-            self.closeMainWindow()
         elif event.key() == Qt.Key_O:
             self.btnClicked()
         elif event.key()==Qt.Key_L:
             self.loop_start()
-
+        elif event.key() == Qt.Key_Escape:
+            self.showNormal()
 
     def mouseDoubleClickEvent(self, event):
         #定义左键双击鼠标事件
